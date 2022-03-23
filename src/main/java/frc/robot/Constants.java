@@ -70,6 +70,7 @@ public class Constants {
         public static final int btnShooter = 1;
         public static final int btnBottomFeed = 2;
         public static final int btnTopFeed = 3;
+        public static final int btnTopFeedReverse = 5;
     }
 
     //Controller Types (don't edit these)

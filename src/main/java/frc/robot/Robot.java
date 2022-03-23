@@ -91,6 +91,14 @@ public class Robot extends TimedRobot {
       System.out.println("teleopPeriodic: Stop top feeder");
       m_topFeeder.set(0.0);
     }
+    if(m_operJoystick.getRawButtonPressed(Constants.OI.btnTopFeedReverse)) { //reverse top feeder
+      System.out.println("teleopPeriodic: Run top feeder reverse");
+      m_topFeeder.set(-Constants.Feeder.kFeederSpeedTop);
+    } else if(m_operJoystick.getRawButtonReleased(Constants.OI.btnTopFeedReverse)) {
+      System.out.println("teleopPeriodic: Stop top feeder");
+      m_topFeeder.set(0.0);
+    }
+
 
     //Handle the shooter 
     if(m_operJoystick.getRawButtonPressed(Constants.OI.btnShooter)) { //start shooter
