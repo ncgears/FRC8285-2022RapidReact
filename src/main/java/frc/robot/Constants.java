@@ -52,6 +52,7 @@ public class Constants {
     public class Auton {
         public static final boolean isDisableld = false;
         public static final String autonName = "Basic";
+        public static final double kAutonDriveSpeed = 0.5; //speed auton drives
     }
 
     //Operator Interface
