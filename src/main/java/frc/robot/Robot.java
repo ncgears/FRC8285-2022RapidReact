@@ -9,10 +9,13 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 
 
@@ -43,6 +46,11 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
+    //Disable LiveWindow data (not needed)
+    LiveWindow.disableAllTelemetry();
+    //Start Camera Server
+    UsbCamera camera = CameraServer.startAutomaticCapture();
+    camera.setResolution(640, 480);
     // Invert one side only usually, so that forward is green on the controller and backwards is red
     m_leftMotor.setInverted(Constants.DriveTrain.Left.isInverted);
     m_rightMotor.setInverted(Constants.DriveTrain.Right.isInverted);
@@ -138,7 +146,23 @@ public class Robot extends TimedRobot {
       switch (Constants.Auton.autonName) {
         case "Basic": //Basic Auton
           if (m_timer.get() < 2.0) { //2 seconds
-            m_robotDrive.arcadeDrive(0.5, 0.0); //drive forward at 50% speed
+            m_robotDrive.arcadeDrive(Constants.Auton.kAutonDriveSpeed, 0.0); //drive forward at 50% speed
+          } else {
+            m_robotDrive.stopMotor(); //stop
+          }
+          break;
+        case "ShootAndScoot": //Basic Auton
+          m_shooter.set(Constants.Shooter.kShooterSpeed); //start the shooter
+          //wait for shooter to get to speed, then run the tunnel until it is time to drive
+          if (m_timer.get() > 0.5 && m_timer.get() < 2.0) { //at 0.5s, until 2s
+            m_topFeeder.set(Constants.Feeder.kFeederSpeedTop);
+          } else {
+            m_topFeeder.stopMotor();
+          }
+          //stop the shooter and start driving
+          if (m_timer.get() > 2.0 && m_timer.get() < 4.0) { //at 2s, until 4s
+            m_shooter.stopMotor();
+            m_robotDrive.arcadeDrive(-Constants.Auton.kAutonDriveSpeed, 0.0); //drive forward at 50% speed
           } else {
             m_robotDrive.stopMotor(); //stop
           }
