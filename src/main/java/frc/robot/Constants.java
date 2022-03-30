@@ -51,7 +51,7 @@ public class Constants {
     //Auton
     public class Auton {
         public static final boolean isDisableld = false;
-        public static final String autonName = "Basic";
+        public static final String autonName = "Basic"; //could be Basic, ShootAndScoot, ScootAndShoot or None
         public static final double kAutonDriveSpeed = 0.5; //speed auton drives
     }
 
